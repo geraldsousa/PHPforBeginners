@@ -1,21 +1,23 @@
-<?php 
+<?php
+
 /**
- * Connects to the database
- * 
- * @return returns connection information
+ * Get the database connection
+ *
+ * @return object Connection to the database server
  */
-function getDB() {
+function getDB()
+{
     $db_host = "localhost";
     $db_name = "cms";
     $db_user = "cms_www";
-    $db_pass = "iY2r7TQxtmZ0m2Nb";
-    
+    $db_pass = "Jul1@2013";
+
     $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
-    
+
     if (mysqli_connect_error()) {
         echo mysqli_connect_error();
         exit;
     }
+
     return $conn;
 }
-
