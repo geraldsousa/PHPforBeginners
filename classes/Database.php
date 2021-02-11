@@ -5,6 +5,8 @@
  * A connection to the database
  */
 class Database {
+
+    
     /**
      * Get the database connection
      * 
