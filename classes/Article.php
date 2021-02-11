@@ -146,4 +146,55 @@ class Article {
         return empty($this->errors);
     }
 
+    /**
+     * Delete an Article
+     * 
+     * @param object $conn Connection to DB
+     * 
+     * @return boolean True if update was successful, false otherwise
+     */
+    public function delete($conn) {
+        $sql = "DELETE FROM article
+            WHERE id = :id";
+
+        $stmt = $conn->prepare( $sql );
+
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Create new article 
+     * @param object $conn Connection to DB
+     * 
+     * @return boolean True if create was successful, false otherwise
+     */
+    public function create($conn) {
+
+        if ($this->validate()) {
+            $sql = "INSERT INTO article (title, content, published_at)
+            VALUES (:title, :content, :published_at)";
+    
+            $stmt = $conn->prepare( $sql );
+
+
+            $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
+            $stmt->bindValue(':content', $this->content, PDO::PARAM_STR);
+
+            if ($this->published_at == '') {
+                $stmt->bindValue(':published_at', null, PDO::PARAM_NULL);
+            } else {
+                $stmt->bindValue(':published_at', $this->published_at, PDO::PARAM_STR);
+            }
+            if ( $stmt->execute()) {
+                $this->id = $conn->lastInsertId();
+                return true;
+            }
+        } else {
+            return false;
+        }
+
+    }
+
 }
