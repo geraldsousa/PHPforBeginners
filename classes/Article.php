@@ -1,6 +1,6 @@
 <?php
 /**
- * Article
+ * Article Class
  */
 class Article {
     /**
@@ -46,6 +46,33 @@ class Article {
 
     return $results->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Get page of articles
+     * 
+     * @param object $conn Database Connection
+     * @param int limit number of records to return
+     * @param int offset offset start
+     * 
+     * @return array Associative array of subset of articles
+     */
+    public static function getPage($conn, $limit, $offset) {
+        $sql = "SELECT *
+        FROM article
+        ORDER BY published_at
+        LIMIT :limit
+        OFFSET :offset";
+
+        $stmt = $conn->prepare( $sql );
+
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     /**
      * Get the article record based on the ID
@@ -194,6 +221,20 @@ class Article {
         } else {
             return false;
         }
+
+    }
+
+    /** 
+     * Get count of articles 
+     * 
+     * @param object $conn Database connection
+     * 
+     * @return integer Total number of records
+    */
+    public static function getTotal($conn) {
+
+        return $conn->query("SELECT count(*) FROM article;")->fetchColumn();
+
 
     }
 

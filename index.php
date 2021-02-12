@@ -4,18 +4,12 @@ require 'includes/init.php';
 
 $conn = require 'includes/db.php';
 
-$articles = Article::getAll($conn);
+$paginator = new Paginator($_GET['page'] ?? 1, 4, Article::getTotal($conn));  // ?? null coelescing operator
+
+$articles = Article::getPage($conn, $paginator->limit, $paginator->offset);
 
 ?>
 <?php require 'includes/header.php'; ?>
-
-<?php if ( Auth::isLoggedIn()): ?>
-    <p>Your are logged in</p><a href="logout.php">Log out</a>
-    <p><a href="new-article.php">New article</a></p>
-<?php else: ?>
-    <p>Your are not logged in</p><a href="login.php">Log in</a>
-<?php endif; ?>
-
 
 <?php if (empty($articles)): ?>
     <p>No articles found.</p>
@@ -32,6 +26,8 @@ $articles = Article::getAll($conn);
         <?php endforeach; ?>
     </ul>
 
+    <?php require 'includes/pagination.php'; ?>
+    
 <?php endif; ?>
 
 <?php require 'includes/footer.php'; ?>
