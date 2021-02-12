@@ -1,20 +1,15 @@
 <?php
 
-require 'classes/Database.php';
-require 'classes/Article.php';
-require 'includes/auth.php';
+require 'includes/init.php';
 
-session_start();
-
-$db = new Database();
-$conn = $db->getConn();
+$conn = require 'includes/db.php';
 
 $articles = Article::getAll($conn);
 
 ?>
 <?php require 'includes/header.php'; ?>
 
-<?php if ( isLoggedIn()): ?>
+<?php if ( Auth::isLoggedIn()): ?>
     <p>Your are logged in</p><a href="logout.php">Log out</a>
     <p><a href="new-article.php">New article</a></p>
 <?php else: ?>
